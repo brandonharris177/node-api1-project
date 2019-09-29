@@ -16,9 +16,10 @@ server.listen(5000, () =>
 
 server.post('/api/users', (req, res) => {
   data.insert(req.body)
-    .then(
-      res.status(201).json(data.findById(id))
-    ).catch(error => {
+    .then(user => data.findById(user.id))
+    .then(userID => {
+      res.status(201).json(data.findById(userID))
+    }).catch(error => {
       res.status(500).json({error: "There was an error while saving the user to the database"})
     }
     )
