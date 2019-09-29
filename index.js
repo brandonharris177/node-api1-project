@@ -15,6 +15,8 @@ server.listen(5000, () =>
 );
 
 server.get('/api/users', (req, res) => {
-  data.find();
-    res.end();
+  data.find()
+    .then(users => res.status(200).json(users));
   });
+
+  
