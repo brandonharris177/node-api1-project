@@ -14,9 +14,23 @@ server.listen(5000, () =>
   console.log('Server running on http://localhost:5000')
 );
 
+server.post('/api/users', (req, res) => {
+  data.insert(req.body)
+    .then(
+      res.status(201).json(data.findById(id))
+    ).catch(error => {
+      res.status(500).json({error: "There was an error while saving the user to the database"})
+    }
+    )
+  });
+
 server.get('/api/users', (req, res) => {
   data.find()
-    .then(users => res.status(200).json(users));
+    .then(users => res.status(200).json(users)
+    ).catch(error => {
+      res.status(500).json({ error: "The user information could not be retrieved." })
+    }
+    )
   });
 
 server.get(`/api/users/:id`, (req, res) => {
@@ -27,5 +41,8 @@ server.get(`/api/users/:id`, (req, res) => {
       } else {
         res.status(404).json({ message: "The user with the specified ID does not exist." })
       }
-    })
+    }).catch(error => {
+      res.status(500).json({ error: "The user information could not be retrieved." })
+    }
+    )
   });  
