@@ -4,6 +4,8 @@ const data = require('./data/db')
 
 const server = express(); // creates the server
 
+server.use(express.json());
+
 // handle requests to the root of the api, the / route
 server.get('/', (req, res) => {
   res.send('Its working');
@@ -15,14 +17,17 @@ server.listen(5000, () =>
 );
 
 server.post('/api/users', (req, res) => {
-  data.insert(req.body)
+  const userData =  req.body
+  console.log(req.body)
+  console.log(`user Data`, userData)
+  data.insert(userData)
     .then(user => data.findById(user.id))
-    .then(userID => {
-      res.status(201).json(data.findById(userID))
+    .then(newUser => {
+      console.log(`new User`, newUser)
+      res.status(201).json(newUser)
     }).catch(error => {
       res.status(500).json({error: "There was an error while saving the user to the database"})
-    }
-    )
+    })
   });
 
 server.get('/api/users', (req, res) => {
@@ -30,8 +35,7 @@ server.get('/api/users', (req, res) => {
     .then(users => res.status(200).json(users)
     ).catch(error => {
       res.status(500).json({ error: "The user information could not be retrieved." })
-    }
-    )
+    })
   });
 
 server.get(`/api/users/:id`, (req, res) => {
@@ -44,6 +48,5 @@ server.get(`/api/users/:id`, (req, res) => {
       }
     }).catch(error => {
       res.status(500).json({ error: "The user information could not be retrieved." })
-    }
-    )
+    })
   });  
